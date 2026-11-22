@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Física I en el software · Portafolio, Entrega final</title>
+<style>
+:root{--bg:#f2f5fa;--card:#fff;--ink:#0f1b2d;--mut:#51607a;--ln:#d5dce8;--a:#1f5fbf;--b:#c2610c;--c:#16805a;--box:#eaf0fa;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b1220;--card:#121c30;--ink:#e6edf7;--mut:#9fb0cc;--ln:#25324d;--a:#6ea8ff;--b:#ffb454;--c:#4fd1a5;--box:#17243d;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0b1220;--card:#121c30;--ink:#e6edf7;--mut:#9fb0cc;--ln:#25324d;--a:#6ea8ff;--b:#ffb454;--c:#4fd1a5;--box:#17243d;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Iowan Old Style",Georgia,serif;line-height:1.2;margin:0}
+header{padding:48px 20px 28px;max-width:960px;margin:auto}
+h1{font-size:clamp(30px,6vw,52px)}header p{color:var(--mut);max-width:70ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);border:1px solid var(--ln);border-radius:20px;padding:4px 12px;font-size:14px;background:var(--card)}
+nav a:hover,nav a:focus-visible{border-color:var(--a);outline:none}
+main{max-width:960px;margin:auto;padding:0 16px 60px}
+section{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:22px;margin:22px 0}
+h2{font-size:clamp(22px,4vw,30px);margin-bottom:4px}.tag{color:var(--mut);font-size:14px;margin:0 0 14px}
+h3{font-size:18px;margin:18px 0 6px;color:var(--a)}
+.eq{background:var(--box);border-left:4px solid var(--b);padding:8px 14px;margin:8px 0;font-family:"Cambria Math",Georgia,serif;font-size:17px;overflow-x:auto}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 18px;background:var(--box);padding:12px;border-radius:10px;margin:10px 0}
+.ctl label{display:block;font-size:14px}.ctl output{font-weight:700;color:var(--b);float:right}.ctl input{width:100%;accent-color:var(--a)}
+.out{display:flex;flex-wrap:wrap;gap:8px 22px;font-weight:600;margin:8px 0}.out span{color:var(--c)}
+svg.ch{width:100%;height:auto;display:block;margin:6px 0}svg text{fill:var(--mut);font:11px system-ui}.gr{stroke:var(--ln)}.ax{stroke:var(--mut)}
+figure{margin:10px 0;overflow-x:auto}figure svg.ch{max-width:600px;margin:6px auto}figcaption,.src{font-size:13px;color:var(--mut)}
+canvas{width:100%;max-width:100%;background:var(--box);border-radius:10px}
+button{background:var(--a);color:#fff;border:0;border-radius:8px;padding:8px 16px;font:inherit;cursor:pointer}
+.warn{border:2px dashed var(--b);padding:14px;border-radius:10px;color:var(--b)}
+iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px}
+footer{max-width:960px;margin:auto;padding:0 20px 50px;font-size:14px;color:var(--mut)}
+</style></head><body>
+<header><h1>Física I en el software</h1>
+<p>Portafolio de evidencias, Entrega final · Trece aplicaciones reales de la física mecánica al desarrollo de software. Todas las simulaciones y gráficas se recalculan en vivo: mueva los controles.</p>
+<p>Universidad CENFOTEC · FUN-18 Física I · Sección FCV1 · 2026-C3 · Docente: Andrés Castro Núñez<br>Estudiante: <b>Kendall Adolfo Segura Arias</b></p></header>
+<nav aria-label="Índice de temas"><a href="#t1">1 Dron</a><a href="#t2">2 Salto</a><a href="#t3">3 Hábitat</a><a href="#t4">4 Llantas F1</a><a href="#t5">5 Háptico</a><a href="#t6">6 Frenado regenerativo</a><a href="#t7">7 Restitución</a><a href="#t8">8 Ruedas de reacción</a><a href="#t9">9 Asistencia gravitatoria</a><a href="#t10">10 Spring</a><a href="#t11">11 Sonido</a><a href="#t12">12 Resonancia</a><a href="#t13">13 Refrigeración</a><a href="#cierre">Qué aprendí</a><a href="#refs">Fuentes</a></nav>
+<main>
+
+<section id="t1"><h2>Tema 1 — Rastreo y navegación de un dron de reparto</h2><p class="tag">Cinemática en 2D · Recurso: visualización de datos</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> los controladores de vuelo de código abierto ArduPilot y PX4 reciben una ruta y la convierten en consignas de posición, velocidad y aceleración que se actualizan cientos de veces por segundo; los drones de reparto se programan sobre este tipo de software.</p>
+<p><b>Ecuaciones:</b></p><div class="eq">r(t) = (x(t), y(t)) · v = dr/dt · a = dv/dt · |v| = √(vₓ² + v_y²)</div>
+<p><b>Por qué modelar la física:</b> una lista de puntos con saltos de velocidad exigiría aceleraciones casi infinitas, que el dron no puede dar y que gastan batería. Al derivar la ruta se puede limitar |a| y garantizar un vuelo suave que no mueva el paquete; el costo es que el modelo ignora el viento, y por eso el software corrige con sensores.</p>
+<h3>Ruta declarada y perfiles</h3><p class="tag">Ruta propia: x(t) = vₓ·t, y(t) = A·sen(ωt), con t de 0 a 60 s. Derivando: v_y = Aω·cos(ωt), a_y = −Aω²·sen(ωt).</p>
+<div id="c1"></div><div id="g1"></div><p class="src">Fuente de los datos: generados por mí a partir de la ruta declarada arriba (no son mediciones reales).</p></section>
+
+<section id="t2"><h2>Tema 2 — El salto del personaje: cómo los motores de juego falsean la gravedad</h2><p class="tag">Caída libre y tiro parabólico · Recurso: simulación interactiva</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> en la charla de GDC 2016 «Math for Game Programmers: Building a Better Jump», Kyle Pittman explica cómo los juegos de plataformas no usan 9,81 m/s²: el diseñador fija la altura h y el tiempo hasta el punto más alto t_p, y el motor deduce la gravedad.</p>
+<div class="eq">g = 2h / t_p² · v₀ = 2h / t_p · h = v₀² / (2g) · t_aire = 2v₀ / g</div>
+<p><b>Por qué modelar la física:</b> una animación guionizada tendría una sola altura. Con ecuaciones, soltar el botón antes recorta el salto y el personaje responde a cualquier impulso, sin animar cada caso. El costo: con gravedad alterada, la sensación depende de números que hay que afinar por prueba.</p>
+<h3>Simulación (línea azul: su gravedad; línea naranja: gravedad terrestre, mismo impulso)</h3>
+<div id="c2"></div><div class="out" id="o2"></div><div id="g2"></div></section>
+
+<section id="t3"><h2>Tema 3 — Gravedad artificial por rotación en hábitats espaciales</h2><p class="tag">Movimiento circular uniforme · Recurso: diagrama</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> el estudio de diseño de la NASA «Space Settlements» (SP-413, 1977) dimensiona el toro de Stanford (unos 1,8 km de diámetro y cerca de 1 rpm) con ecuaciones de rotación; hoy ese cálculo vive en herramientas de diseño paramétrico de hábitats.</p>
+<div class="eq">a_c = ω²r = v²/r · ω = 2π/T · f = 1/T</div>
+<p><b>Por qué modelar la física:</b> una gravedad «fija» no avisa que a radios pequeños la diferencia de a_c entre cabeza y pies, y el efecto Coriolis, marean a la gente. Con la ecuación se explora r contra rpm antes de construir; el costo es que los límites de confort humano son empíricos.</p>
+<h3>Diagrama propio</h3>
+<figure><svg viewBox="0 0 560 300" class="ch" role="img" aria-label="Hábitat rotatorio con eje, radio y aceleración centrípeta"><defs><marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
+<circle cx="190" cy="150" r="110" fill="none" stroke="var(--a)" stroke-width="10"/><circle cx="190" cy="150" r="5" fill="var(--ink)"/>
+<line x1="190" y1="150" x2="300" y2="150" stroke="var(--ink)" stroke-dasharray="4"/><text x="240" y="142">r (m)</text>
+<line x1="86" y1="150" x2="150" y2="150" stroke="var(--b)" stroke-width="3" marker-end="url(#ar3)"/><text x="92" y="140" style="fill:var(--b)">a_c hacia el eje</text>
+<path d="M300 150 L300 90" stroke="var(--c)" stroke-width="3" marker-end="url(#ar3)"/><text x="306" y="100" style="fill:var(--c)">v tangencial (m/s)</text>
+<path d="M98 58 A130 130 0 0 1 282 58" fill="none" stroke="var(--ink)" marker-end="url(#ar3)"/><text x="190" y="12" text-anchor="middle">ω (rad/s), sentido de giro</text>
+<text x="196" y="190">eje de giro (⊙)</text>
+<text x="330" y="190" style="fill:var(--ink);font-size:13px">a_c = ω² r</text><text x="330" y="210" style="fill:var(--ink);font-size:13px">ω = 2π / T = v / r</text><text x="330" y="230" style="fill:var(--ink);font-size:13px">1 g ⇒ r = g / ω²</text></svg>
+<figcaption>Esquema hecho por mí. Los habitantes están en el interior del anillo, con los pies en el borde.</figcaption></figure>
+<h3>Caso numérico: ¿qué radio y qué rpm dan 1 g?</h3>
+<p>Con g = 9,81 m/s² y N rpm: ω = N·2π/60 y r = g/ω². Ejemplo con N = 2 rpm: ω = 0,2094 rad/s, r = 9,81 / 0,2094² ≈ 224 m, T = 30 s. Con N = 1 rpm: ω = 0,1047 rad/s y r ≈ 895 m, del orden del toro de Stanford. Conexión: la rotación conserva momento angular, como en la rueda del <a href="#t8">tema 8</a>.</p>
+<div id="c3"></div><div class="out" id="o3"></div></section>
+
+<section id="t4"><h2>Tema 4 — Llantas de Fórmula 1: la ventana de temperatura y el agarre</h2><p class="tag">Fricción · Recurso: visualización de datos</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> los simuladores de tiempo por vuelta de los equipos de F1 y los videojuegos de la serie F1 (Codemasters/EA) modelan la temperatura de la llanta Pirelli, porque fuera de su ventana el coche pierde agarre.</p>
+<div class="eq">F_fricción ≤ μ·N · μ(F_z) = μ₀(1 − k·F_z) · F_y,máx = μ(F_z)·F_z</div>
+<p><b>Por qué modelar la física:</b> un μ fijo predice que el doble de carga da el doble de agarre, y la goma real no lo cumple: por eso un coche con mucha carga aerodinámica sigue ganando agarre, pero cada vez menos. Un valor fijo no reproduce el desgaste ni el sobrecalentamiento; el costo es calibrar parámetros con datos de pista.</p>
+<h3>Fricción estática y cinética</h3><div class="eq">f_s,máx = μ_s·N · f_k = μ_k·N · μ_s > μ_k</div><p>Mientras la llanta rueda sin deslizar, el contacto es estático y el agarre llega a su pico μ_s·N. Si patina, pasa a fricción cinética, menor. Por eso el ABS y el control de tracción modulan el frenado para quedarse en el pico; un simulador que use un solo μ no reproduce el bloqueo. El calor generado se disipa como en el <a href="#t6">tema 6</a>.</p><div id="c4"></div><div id="g4"></div>
+<p class="src">Datos calculados por mí con los modelos de arriba (μ₀, k, T_óptima y el ancho 25 °C son valores ilustrativos). Comportamiento cualitativo según Milliken &amp; Milliken, <i>Race Car Vehicle Dynamics</i> (SAE, 1995) y Pacejka, <i>Tire and Vehicle Dynamics</i> (Elsevier).</p></section>
+
+<section id="t5"><h2>Tema 5 — El resorte virtual detrás de un control háptico</h2><p class="tag">Ley de Hooke y tercera ley de Newton · Recurso: multimedia con análisis</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> los gatillos adaptativos del DualSense (PlayStation 5) usan un motor que empuja contra el dedo; el software calcula esa fuerza según cuánto se hundió el gatillo.</p>
+<div class="eq">F_motor sobre gatillo = −k·x · F_gatillo→dedo = −F_dedo→gatillo (3.ª ley)</div>
+<p><b>Por qué modelar la física:</b> un clip de vibración pregrabado suena igual sin importar cuánto se presione. Con F = −kx la resistencia crece con el recorrido, igual que un arco real. El costo: el motor tiene una fuerza máxima y satura.</p>
+<h3>Video del efecto háptico</h3><div id="vid"></div>
+<p class="src">Video: The Tech Tales, «Testing PS5 Dual Sense - Adaptive Triggers, Vibration, Motion Sensor, Touch Pad», YouTube (youtube.com/watch?v=_ED1rXrVOVk).</p><h3>Análisis escrito</h3>
+<p>A los <b>1:21</b> el presentador anuncia que va a probar los gatillos adaptativos. En el instante <b>1:32</b> presiona el gatillo con fuerza y comenta que ya no está tan suave como antes, que se ha endurecido; además se nota una vibración.</p><p><b>Interpretación con la física:</b> sin el efecto, el gatillo solo opone la resistencia de su resorte mecánico, pequeña y casi constante. Con el efecto activo, el motor aplica una fuerza contra el dedo que depende del recorrido, como un resorte virtual: <b>F = −kx</b>. Cuanto más se hunde el gatillo, más fuerza debe hacer el dedo para seguir avanzando, y eso se percibe como «duro». Por la tercera ley de Newton forman un par de acción y reacción: el dedo empuja al gatillo y el gatillo empuja al dedo con igual magnitud y sentido opuesto. La fuerza del motor actúa sobre el gatillo (no es la reacción del dedo); en equilibrio, por la segunda ley, la fuerza del dedo iguala a la del motor. Conexión: el mismo F = −kx gobierna el <a href="#t10">tema 10</a>.</p><p>Ese comportamiento corresponde a la zona lineal de la curva de abajo: sin fuerza durante la holgura inicial (2 mm), luego F = k(x − holgura) hasta el límite del motor, y una caída de golpe a los 10 mm cuando «rompe» el disparo. El video no permite medir x ni F, así que la holgura, k = 1,5 N/mm y el clic a 10 mm son valores ilustrativos de mi modelo, no mediciones del DualSense.</p>
+<div id="c5"></div><div id="g5"></div></section>
+
+<section id="t6"><h2>Tema 6 — Frenado regenerativo en un vehículo eléctrico</h2><p class="tag">Trabajo, energía cinética y transformación de energía · Recurso: visualización de datos</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> el software de control de un vehículo como el Nissan Leaf (modo e-Pedal) reparte el frenado entre el motor, que recarga la batería, y los frenos de fricción, que lo disipan en calor.</p>
+<div class="eq">E_c = ½mv² · E_recuperada = η·E_c · E_calor = (1 − η)·E_c</div>
+<p><b>Por qué modelar la física:</b> la energía a recuperar depende de m y v; con un valor fijo, el control mezclaría mal motor y frenos. El modelo dice cuánto puede absorber la batería y cuánto debe frenar la fricción. Costo: este modelo simple ignora arrastre aerodinámico y resistencia de rodadura.</p>
+<h3>Balance de energía en un ciclo propio</h3><p class="tag">Ciclo declarado: 40 s repetido 3 veces (acelerar 10 s, constante 15 s, frenar 10 s, detenido 5 s).</p>
+<div id="c6"></div><div class="out" id="o6"></div><div id="g6"></div>
+<p class="src">Fuente: ciclo y cálculo propios; rangos de eficiencia típicos tomados de Ehsani et al., <i>Modern Electric, Hybrid Electric, and Fuel Cell Vehicles</i> (CRC Press).</p></section>
+
+<section id="t7"><h2>Tema 7 — El coeficiente de restitución en un motor de videojuego: por qué la pelota rebota mal</h2><p class="tag">Colisiones y momento lineal · Recurso: simulación interactiva</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> el motor Box2D y los materiales de física de Unity incluyen un parámetro de «restitución» o «bounciness» que cada objeto declara.</p>
+<div class="eq">e = −(v₂′ − v₁′)/(v₂ − v₁) · m₁v₁ + m₂v₂ = m₁v₁′ + m₂v₂′ · h_n = h₀·e^{2n}</div>
+<p><b>Por qué modelar la física:</b> con una animación guionizada la pelota rebotaría igual desde cualquier altura. Con e, cada impacto responde a su velocidad real. Costo: con e ≈ 1 el error numérico acumula energía y la pelota «explota», por eso los motores detienen el rebote bajo un umbral de velocidad.</p>
+<div id="c7"></div><button id="b7">Soltar la pelota</button><div class="out" id="o7"></div><canvas id="cv" width="640" height="300" aria-label="Pelota que rebota"></canvas></section>
+
+<section id="t8"><h2>Tema 8 — Ruedas de reacción: cómo un satélite se gira sin empujarse contra nada</h2><p class="tag">Momento angular y torque · Recurso: diagrama</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> el Telescopio Espacial Hubble apunta con ruedas de reacción gobernadas por software de control de actitud; en el telescopio Kepler, la pérdida de dos ruedas obligó a rediseñar la misión (K2).</p>
+<div class="eq">L_total = I_s·ω_s + I_w·ω_w = 0 · ω_s = −(I_w/I_s)·ω_w · τ = I_w·α_w</div>
+<p><b>Por qué modelar la física:</b> en el vacío no hay nada contra qué empujar; el algoritmo solo puede intercambiar momento angular interno. Con la ecuación, el software sabe cuánto debe acelerar la rueda para girar un ángulo y cuándo se saturará. Costo: pierde precisión si el modelo ignora perturbaciones externas.</p>
+<h3>Diagrama propio</h3>
+<figure><svg viewBox="0 0 560 280" class="ch" role="img" aria-label="Satélite con rueda de reacción"><defs><marker id="ar8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
+<rect x="150" y="70" width="170" height="130" rx="8" fill="var(--box)" stroke="var(--a)" stroke-width="3"/><text x="160" y="90">Satélite (I_s en kg·m²)</text>
+<circle cx="235" cy="152" r="32" fill="none" stroke="var(--b)" stroke-width="4"/><text x="235" y="156" text-anchor="middle">Rueda I_w</text>
+<path d="M195 129 A46 46 0 0 1 275 129" fill="none" stroke="var(--b)" stroke-width="2" marker-end="url(#ar8)"/><text x="335" y="84" style="fill:var(--b)">ω_w (rad/s): la rueda acelera</text>
+<path d="M338 190 A45 45 0 0 0 338 100" fill="none" stroke="var(--a)" stroke-width="2" marker-end="url(#ar8)"/><text x="392" y="148" style="fill:var(--a)">ω_s: gira al revés</text>
+<text x="20" y="240" style="fill:var(--ink);font-size:13px">1) L_total = I_s ω_s + I_w ω_w = 0 (sistema aislado)</text>
+<text x="20" y="258" style="fill:var(--ink);font-size:13px">2) ω_s = −(I_w/I_s)·ω_w   3) τ_rueda = I_w α_w; τ_satélite = −τ_rueda</text></svg>
+<figcaption>Esquema hecho por mí. Si el motor acelera la rueda, la reacción gira el satélite en sentido contrario.</figcaption></figure>
+<p><b>Qué ocurre a la velocidad máxima:</b> cuando la rueda llega a ω_max ya no puede almacenar más momento angular: está saturada. Entonces se necesita un torque externo (magnetotorques que usan el campo terrestre, o propulsores) para «descargarla».</p>
+<h3>Calculadora (I_s = 10 kg·m², I_w = 0,005 kg·m², ω_max = 6000 rpm)</h3>
+<div id="c8"></div><div class="out" id="o8"></div></section>
+
+<section id="t9"><h2>Tema 9 — Asistencia gravitatoria: cómo la Voyager ganó velocidad sin gastar combustible</h2><p class="tag">Gravitación universal y conservación del momento · Recurso: visualización de datos</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> la herramienta GMAT de la NASA y otros programas de diseño de misión calculan trayectorias con asistencias gravitatorias, como las de la Voyager 2 (Júpiter, Saturno, Urano y Neptuno).</p>
+<div class="eq">v² = v∞² + 2μ/r · |v∞,entrada| = |v∞,salida| (en el marco del planeta) · v⃗_sonda,Sol = v⃗_planeta + v⃗∞ (suma vectorial)</div>
+<p><b>Por qué modelar la física:</b> el planeta pierde una cantidad ínfima de momento y la sonda lo gana; un valor fijo no dice cuándo conviene lanzar. El modelo permite buscar ventanas de alineación planetaria que se repiten cada ~175 años. Costo: pequeños errores de ángulo se amplifican.</p>
+<h3>Gravitación universal y energía potencial</h3><div class="eq">F = GMm/r² · U = −GMm/r · ½mv² − GMm/r = constante en el marco del planeta</div><p>La sonda cae hacia el planeta (U baja, v sube) y sale perdiendo la misma energía: en el marco del planeta la rapidez de salida iguala la de entrada, solo cambia la dirección. En el marco del Sol, el giro del vector v⃗∞ suma o resta a v⃗_planeta. Ejemplo (Júpiter, μ = 1,267×10⁸ km³/s², r = 650 000 km): v_esc = √(2μ/r) ≈ 19,7 km/s. Es el mismo intercambio que una colisión elástica del <a href="#t7">tema 7</a> vista desde el planeta.</p><div id="c9"></div><div id="g9"></div>
+<p class="src">Fuentes: incrementos de velocidad (+10, +4, +2 y −3 km/s) y rapidez de llegada a Júpiter (~10 km/s): NASA/JPL, «The Voyagers’ Odyssey», American Scientist. Curva calculada por mí con v² = C + 1774/r (r en UA, v en km/s), r(t) lineal por tramos con las fechas de los encuentros; es una aproximación, no telemetría. Para telemetría real véase JPL Horizons (ssd.jpl.nasa.gov/horizons).</p></section>
+
+<section id="t10"><h2>Tema 10 — Spring animations: el resorte amortiguado detrás de iOS y Framer Motion</h2><p class="tag">Oscilación amortiguada · Recurso: simulación interactiva</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> Framer Motion (<code>type: "spring"</code> con <code>stiffness</code>, <code>damping</code>, <code>mass</code>) y SwiftUI (<code>.spring</code>) animan con un resorte amortiguado en vez de una duración fija.</p>
+<div class="eq">m·x″ = −k·x − c·x′ · ω₀ = √(k/m) · ζ = c / (2√(km))</div>
+<p><b>Por qué modelar la física:</b> con una duración fija, interrumpir una animación en curso produce un salto brusco; el resorte parte de la posición y velocidad actuales y se ve continuo. ζ&lt;1 rebota (subamortiguado), ζ=1 llega sin rebotar lo más rápido (crítico), ζ&gt;1 es lento (sobreamortiguado). Costo: la duración ya no es un dato directo y hay que afinar k y c.</p>
+<div id="c10"></div><div class="out" id="o10"></div><div style="background:var(--box);border-radius:10px;height:44px;position:relative"><div id="bx" style="position:absolute;top:6px;left:0;width:32px;height:32px;border-radius:8px;background:var(--b)"></div></div><button id="b10" style="margin:8px 0">Animar (x: 0 → 1)</button><div id="g10"></div>
+<p class="src">Cálculo propio: integración numérica (Euler semiimplícito, Δt = 1 ms) con x(0)=0, objetivo 1. Conexión: es el resorte del <a href="#t5">tema 5</a> con un término de disipación.</p></section>
+
+<section id="t11"><h2>Tema 11 — Síntesis de sonido: armónicos, timbre y el sintetizador</h2><p class="tag">Ondas y armónicos · Recurso: multimedia con análisis</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> la síntesis aditiva y los osciladores de diente de sierra de los sintetizadores de software (por ejemplo, la Web Audio API de los navegadores) construyen timbres sumando armónicos.</p>
+<div class="eq">y(t) = Σ Aₙ·sen(2π·n·f₀·t) · fₙ = n·f₀ · sierra: Aₙ = 1/n</div>
+<p><b>Por qué modelar la física:</b> reproducir cada instrumento como grabación exige una muestra por nota y por intensidad; con la suma de armónicos un oscilador cubre cualquier tono y se puede modular en vivo. Costo: el sonido de un instrumento real también tiene ataque y ruido que la suma estática no captura.</p>
+<h3>Dos muestras con el mismo tono (220 Hz, La₃)</h3>
+<p>Flauta (casi pura): <audio controls src="audio/flauta_220Hz.wav"></audio></p><p>Diente de sierra (10 armónicos): <audio controls src="audio/sierra_220Hz.wav"></audio></p>
+<div id="g11"></div>
+<h3>Análisis escrito</h3>
+<p>Las dos muestras tienen f₀ = 220 Hz, así que se percibe la misma nota. La forma de onda de la flauta (arriba) es casi una senoide: casi toda la energía está en el armónico 1 (A₂ = 0,12 y A₃ = 0,04). La sierra suena brillante y áspera porque suma diez armónicos con Aₙ = 1/n, y la forma de onda muestra bordes agudos. La diferencia de timbre sale entonces de los cocientes A₂/A₁, A₃/A₁…, no de la frecuencia. Las gráficas se calculan con las mismas amplitudes con que generé los archivos de audio (síntesis propia, sin fuentes externas).</p></section>
+
+<section id="t12"><h2>Tema 12 — Resonancia estructural: Tacoma Narrows y el paso roto en los puentes</h2><p class="tag">Oscilación forzada y resonancia · Recurso: multimedia con análisis</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> tras Tacoma Narrows (1940), el diseño de puentes se verifica con software de análisis modal por elementos finitos (como SAP2000) y con ensayos en túnel de viento.</p>
+<div class="eq">x″ + 2ζω₀x′ + ω₀²x = (F₀/m)·cos(ωt) · A(r) = (F₀/k) / √((1−r²)² + (2ζr)²), r = ω/ω₀</div>
+<p><b>Por qué modelar la física:</b> un factor de seguridad estático no detecta que una carga pequeña pero periódica puede amplificarse; el análisis modal da las frecuencias naturales antes de construir. Costo: exige conocer la rigidez, la masa y el amortiguamiento reales, y el viento añade efectos aeroelásticos.</p>
+<h3>Video del fenómeno</h3><iframe src="https://www.youtube.com/embed/j-zczJXSxnw" allowfullscreen title="Colapso del puente de Tacoma Narrows"></iframe>
+<p class="src">Video: «Tacoma Narrows Bridge Collapse», filmaciones de 1940 (Barney Elliott); YouTube (youtube.com/watch?v=j-zczJXSxnw).</p>
+<h3>Análisis escrito</h3>
+<p><b>Frecuencia natural:</b> el modo que destruyó el puente fue el de torsión del tablero, de unos 0,2 Hz (≈12 ciclos por minuto, según Olson et al., 2015). Se ve en el video cuando un lado del tablero sube mientras el otro baja, girando alrededor de la línea central. <b>Excitación:</b> viento sostenido de unos 64 km/h. <b>Por qué crece la amplitud:</b> cerca de r = 1 la fórmula da A muy grande si ζ es pequeño; en la gráfica de abajo el pico crece al bajar ζ. Matiz: la explicación actual es flutter aeroelástico (el movimiento del tablero modifica la fuerza del viento, que alimenta la oscilación) y no una simple coincidencia con un remolino periódico; el modelo de arriba es la versión simplificada que muestra por qué la amplitud se dispara. Esto también explica por qué las tropas rompen el paso: sus pisadas pueden aproximarse a la frecuencia natural del puente. Conexión: ver el oscilador amortiguado del <a href="#t10">tema 10</a>.</p>
+<div id="c12"></div><div id="g12"></div></section>
+
+<section id="t13"><h2>Tema 13 — Enfriamiento líquido de un centro de datos: continuidad, caudal y Bernoulli</h2><p class="tag">Ecuación de continuidad y Bernoulli · Recurso: visualización de datos</p>
+<h3>Caso de uso en Ingeniería del Software</h3>
+<p><b>Caso concreto:</b> los TPU de Google usan refrigeración líquida directa al chip (anunciada desde TPU v3, Google I/O 2018); el software de planificación hidráulica dimensiona tuberías y bombas para que cada rack reciba su caudal.</p>
+<div class="eq">Q = A₁v₁ = A₂v₂ · P₁ + ½ρv₁² = P₂ + ½ρv₂² · A = πd²/4</div>
+<p><b>Por qué modelar la física:</b> un caudal «igual para todos» ignora que al estrechar la tubería la velocidad sube y la presión estática baja, lo que puede causar cavitación o dejar sin flujo a un servidor lejano. Costo: Bernoulli ignora la fricción (que en tubos largos domina), así que se corrige con pérdidas de Darcy–Weisbach.</p>
+<h3>Perfil a lo largo de una tubería</h3><p class="tag">Parámetros declarados: agua, ρ = 1000 kg/m³; la sección de referencia es de 40 mm y tiene presión manométrica P₀ = 200 kPa; sin fricción ni cambio de altura.</p>
+<div id="c13"></div><div id="g13"></div>
+<p class="src">Datos calculados por mí con las ecuaciones de arriba (valores ilustrativos, no mediciones). Fundamento: Çengel y Cimbala, <i>Mecánica de fluidos</i>, caps. de continuidad y Bernoulli.</p></section>
+
+<section id="cierre"><h2>Qué aprendí</h2>
+<h3>(a) Mapa de conexiones</h3>
+<p><b>Tema 5 (háptico) y tema 10 (spring animations):</b> los dos son la ley de Hooke, F = −kx. El gatillo del DualSense es un resorte virtual; la animación de iOS es un resorte al que se le suma amortiguamiento, y ambos se programan eligiendo k.</p>
+<p><b>Tema 7 (restitución) y tema 9 (asistencia gravitatoria):</b> en el marco del planeta, el encuentro es una colisión elástica: la rapidez de salida iguala la de entrada, como con e = 1. En el marco del Sol, la sonda gana energía porque el planeta se mueve, igual que una pelota rebotando contra una pared en movimiento.</p>
+<p><b>Tema 3 (hábitat rotatorio) y tema 8 (ruedas de reacción):</b> ambos se rigen por la conservación del momento angular de un sistema aislado; el hábitat lo conserva al girar a ω constante y el satélite lo reparte entre rueda y cuerpo.</p>
+<h3>(b) Mi aplicación propia</h3>
+<p><b>Problema:</b> el control de estabilización de una cámara montada en un dron o un gimbal de software.</p>
+<p>Una cámara estabilizada debe girar para compensar el movimiento del dron sin vibrar. Eso es un problema de oscilación amortiguada (tema 10): si el control se modela como un resorte virtual de rigidez k y amortiguamiento c, ζ = c/(2√(km)) permite elegir el régimen crítico, que corrige lo más rápido posible sin rebotar. Si ζ es muy bajo, la cámara oscila; si es muy alto, tarda en responder y el video se ve inclinado.</p>
+<p>La segunda parte es la resonancia (tema 12). Los motores del dron vibran a ciertas frecuencias; si coinciden con la frecuencia natural ω₀ = √(k/m) del gimbal, la amplitud se amplifica como en la curva A(r). Con el modelo se calcula ω₀ antes de construir y se aleja de la frecuencia de las hélices, o se añade amortiguamiento. Se complementa con el momento angular (tema 8): el gimbal rota con motores que se empujan contra el propio dron, igual que la rueda contra el satélite. Hay que argumentar sus límites: motores con torque máximo y sensores con ruido.</p></section>
+
+<section id="refs"><h2>Fuentes y créditos</h2><ul style="padding-left:20px">
+<li>NASA, <i>Space Settlements: A Design Study</i>, SP-413 (1977): <a href="https://space.nss.org/settlement/nasa/75SummerStudy/Design.html">space.nss.org</a>.</li>
+<li>Pittman, K. «Math for Game Programmers: Building a Better Jump», GDC 2016: <a href="https://www.gdcvault.com/play/1023148">gdcvault.com/play/1023148</a>.</li>
+<li>Milliken, W. y Milliken, D., <i>Race Car Vehicle Dynamics</i>, SAE (1995); Pacejka, H., <i>Tire and Vehicle Dynamics</i>, 3.ª ed., Elsevier (2012).</li>
+<li>Ehsani, M. et al., <i>Modern Electric, Hybrid Electric, and Fuel Cell Vehicles</i>, 3.ª ed., CRC Press (2018).</li>
+<li>NASA/JPL, «The Voyagers’ Odyssey», American Scientist: <a href="https://americanscientist.org/node/3686">americanscientist.org/node/3686</a>; JPL Horizons: <a href="https://ssd.jpl.nasa.gov/horizons/">ssd.jpl.nasa.gov/horizons</a>.</li>
+<li>The Tech Tales, «Testing PS5 Dual Sense…», <a href="https://www.youtube.com/watch?v=_ED1rXrVOVk">YouTube</a>.</li>
+<li>Olson, D., Wolf, S. y Hook, J., «The Tacoma Narrows Bridge collapse», <i>Physics Today</i> 68(11), 64 (2015): <a href="https://physicstoday.aip.org/quick-study/the-tacoma-narrows-bridge-collapse-1760014552637">physicstoday.aip.org</a>. Video: <a href="https://www.youtube.com/watch?v=j-zczJXSxnw">YouTube</a>.</li>
+<li>Çengel, Y. y Cimbala, J., <i>Mecánica de fluidos: fundamentos y aplicaciones</i>, McGraw-Hill.</li>
+<li>Herramientas: <a href="https://box2d.org">Box2D</a>, <a href="https://ardupilot.org">ArduPilot</a>, <a href="https://px4.io">PX4</a>, <a href="https://www.framer.com/motion/">Framer Motion</a>, <a href="https://developer.mozilla.org/docs/Web/API/Web_Audio_API">Web Audio API</a>.</li></ul></section>
+</main>
+<footer>Estudiante: Kendall Adolfo Segura Arias · Repositorio público: <a href="https://github.com/Kendall333/Portafolio2_Fisica" style="color:var(--a)">github.com/Kendall333/Portafolio2_Fisica</a></footer>
+<script>
+const $=id=>document.getElementById(id),K=['var(--a)','var(--b)','var(--c)'];
+function ch(S,xl,yl,mk){const W=640,H=270,L=60,R=14,T=26,B=46;
+let xs=S.flatMap(s=>s.p.map(p=>p[0])),ys=S.flatMap(s=>s.p.map(p=>p[1]));
+let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(0,...ys),y1=Math.max(0,...ys);if(y1==y0)y1=y0+1;y1+=(y1-y0)*.06;
+const X=v=>L+(v-x0)/(x1-x0)*(W-L-R),Y=v=>T+(1-(v-y0)/(y1-y0))*(H-T-B);let g='';
+for(let i=0;i<=5;i++){const yv=y0+(y1-y0)*i/5,xv=x0+(x1-x0)*i/5;
+g+=`<line class="gr" x1="${L}" x2="${W-R}" y1="${Y(yv)}" y2="${Y(yv)}"/><text x="${L-6}" y="${Y(yv)+4}" text-anchor="end">${+yv.toPrecision(3)}</text><text x="${X(xv)}" y="${H-B+16}" text-anchor="middle">${+xv.toPrecision(5)}</text>`}
+g+=`<line class="ax" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}"/><line class="ax" x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+(mk||[]).forEach(m=>g+=`<line class="gr" x1="${X(m[0])}" x2="${X(m[0])}" y1="${T}" y2="${H-B}" stroke-dasharray="3"/><text x="${X(m[0])}" y="${T-4}" text-anchor="middle">${m[1]}</text>`);
+S.forEach((s,i)=>{g+=`<polyline fill="none" stroke="${K[i]}" stroke-width="2.2" points="${s.p.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join(' ')}"/><text x="${L+10+i*120}" y="12" style="fill:${K[i]};font-weight:700">— ${s.n}</text>`});
+g+=`<text x="${(L+W-R)/2}" y="${H-6}" text-anchor="middle">${xl}</text><text transform="rotate(-90)" x="${-(T+(H-T-B)/2)}" y="14" text-anchor="middle">${yl}</text>`;
+return `<svg class="ch" viewBox="0 0 ${W} ${H}" role="img" aria-label="${yl} contra ${xl}">${g}</svg>`}
+function ctl(id,defs,fn){const b=$(id);b.className='ctl';
+b.innerHTML=defs.map(d=>`<label>${d[1]} <output id="${id}${d[0]}"></output><input type="range" id="${id}_${d[0]}" min="${d[2]}" max="${d[3]}" step="${d[4]}" value="${d[5]}"></label>`).join('');
+const run=()=>{const v={};defs.forEach(d=>{const e=$(id+'_'+d[0]);v[d[0]]=+e.value;$(id+d[0]).textContent=e.value+' '+d[6]});fn(v)};b.addEventListener('input',run);run()}
+const rng=(a,b,s)=>{const r=[];for(let t=a;t<=b+1e-9;t+=s)r.push(t);return r},f=(T,g)=>T.map(t=>[t,g(t)]);
+// 1
+ctl('c1',[['A','Amplitud lateral A',10,60,1,40,'m'],['vx','Velocidad de avance vₓ',1,6,.5,3,'m/s'],['w','Frecuencia angular ω',.05,.3,.01,.12,'rad/s']],p=>{
+const T=rng(0,60,.5),vy=t=>p.A*p.w*Math.cos(p.w*t);
+$('g1').innerHTML=ch([{n:'x(t)',p:f(T,t=>p.vx*t)},{n:'y(t)',p:f(T,t=>p.A*Math.sin(p.w*t))}],'Tiempo t (s)','Posición (m)')+
+ch([{n:'vₓ',p:f(T,t=>p.vx)},{n:'v_y',p:f(T,vy)},{n:'|v|',p:f(T,t=>Math.hypot(p.vx,vy(t)))}],'Tiempo t (s)','Velocidad (m/s)')+
+ch([{n:'a_y',p:f(T,t=>-p.A*p.w*p.w*Math.sin(p.w*t))}],'Tiempo t (s)','Aceleración (m/s²)')});
+// 2
+ctl('c2',[['v','Impulso de salto v₀',3,15,.5,8,'m/s'],['g','Gravedad g',4,30,.5,20,'m/s²']],p=>{
+const tm=Math.max(2*p.v/p.g,2*p.v/9.81),T=rng(0,tm,tm/60),h=(v,g)=>t=>Math.max(0,v*t-.5*g*t*t);
+$('o2').innerHTML=`<div>Altura máxima: <span>${(p.v*p.v/2/p.g).toFixed(2)} m</span></div><div>Tiempo en el aire: <span>${(2*p.v/p.g).toFixed(2)} s</span></div><div>Con 9,81 m/s²: <span>${(p.v*p.v/2/9.81).toFixed(2)} m</span></div>`;
+$('g2').innerHTML=ch([{n:'su g',p:f(T,h(p.v,p.g))},{n:'g = 9,81',p:f(T,h(p.v,9.81))}],'Tiempo t (s)','Altura h (m)')});
+// 3
+ctl('c3',[['n','Revoluciones por minuto N',.5,6,.1,2,'rpm']],p=>{const w=p.n*2*Math.PI/60,r=9.81/w/w;
+$('o3').innerHTML=`<div>ω = <span>${w.toFixed(4)} rad/s</span></div><div>T = <span>${(60/p.n).toFixed(1)} s</span></div><div>f = <span>${(p.n/60).toFixed(4)} Hz</span></div><div>Radio para 1 g: <span>${r.toFixed(0)} m</span></div>`});
+// 4
+ctl('c4',[['m','Agarre máximo μ₀',1.2,2.2,.05,1.8,''],['k','Sensibilidad a la carga k',.005,.06,.005,.03,'1/kN'],['t','Temperatura óptima',80,110,1,100,'°C']],p=>{
+const Z=rng(1,8,.25),T=rng(40,160,2);
+$('g4').innerHTML=ch([{n:'modelo simple μ·Fz',p:f(Z,z=>p.m*z)},{n:'con sensibilidad a la carga',p:f(Z,z=>p.m*(1-p.k*z)*z)}],'Carga vertical F_z (kN)','Fuerza lateral máx. F_y (kN)')+
+ch([{n:'μ(T)',p:f(T,t=>p.m*Math.exp(-(((t-p.t)/25)**2)))}],'Temperatura de la llanta (°C)','Coeficiente de agarre μ (sin unidades)')});
+// 5
+const VIDEO='https://www.youtube.com/embed/_ED1rXrVOVk';$('vid').innerHTML=VIDEO?`<iframe src="${VIDEO}" allowfullscreen title="Efecto háptico"></iframe>`:'<div class="warn">Pegue aquí el enlace de incrustación (embed) del video del efecto háptico y cite su fuente.</div>';
+ctl('c5',[['k','Rigidez virtual k',.5,3,.1,1.5,'N/mm'],['x0','Holgura inicial',0,4,.5,2,'mm'],['F','Fuerza máxima del motor',2,20,1,12,'N']],p=>{
+const X=rng(0,12,.25);$('g5').innerHTML=ch([{n:'F(x) del efecto',p:f(X,x=>x>10?0:Math.min(p.k*Math.max(0,x-p.x0),p.F))}],'Recorrido del gatillo x (mm)','Fuerza restauradora F (N)')});
+// 6
+ctl('c6',[['m','Masa del vehículo m',1000,2500,50,1800,'kg'],['v','Rapidez máxima v',20,100,5,50,'km/h'],['e','Eficiencia de recuperación η',0,90,5,65,'%']],p=>{
+const vp=p.v/3.6,dt=.25;let R=0,H=0,Rs=[],Hs=[],Vs=[];
+for(let i=0;i<=120/dt;i++){const t=i*dt,s=t%40,vel=s<10?vp*s/10:s<25?vp:s<35?vp*(35-s)/10:0,br=s>=25&&s<35;
+if(br){const vn=Math.max(0,vel-vp/10*dt),E=.5*p.m*(vel*vel-vn*vn);R+=E*p.e/100;H+=E*(1-p.e/100)}
+if(i%4==0){Rs.push([t,R/1e3]);Hs.push([t,H/1e3]);Vs.push([t,vel*3.6])}}
+const Ec=.5*p.m*vp*vp;
+$('o6').innerHTML=`<div>E_c por frenada: <span>${(Ec/1e3).toFixed(1)} kJ</span></div><div>Recuperada total: <span>${(R/1e3).toFixed(1)} kJ</span></div><div>Disipada total: <span>${(H/1e3).toFixed(1)} kJ</span></div><div>Control: 3·E_c = <span>${(3*Ec/1e3).toFixed(1)} kJ</span></div>`;
+$('g6').innerHTML=ch([{n:'rapidez v (km/h)',p:Vs}],'Tiempo t (s)','Rapidez (km/h)')+ch([{n:'recuperada',p:Rs},{n:'disipada (calor)',p:Hs}],'Tiempo t (s)','Energía acumulada (kJ)')});
+// 7
+let st={y:5,v:0,run:0,n:0,pk:5,e:.75,h:5};const cv=$('cv'),cx=cv.getContext('2d');
+function draw(){const css=getComputedStyle(document.documentElement),W=cv.width,H=cv.height,s=(H-40)/(st.h*1.1);cx.clearRect(0,0,W,H);
+cx.strokeStyle=css.getPropertyValue('--mut');cx.beginPath();cx.moveTo(0,H-20);cx.lineTo(W,H-20);cx.stroke();
+cx.setLineDash([4,4]);cx.beginPath();cx.moveTo(0,H-20-st.h*s);cx.lineTo(W,H-20-st.h*s);cx.stroke();cx.setLineDash([]);
+cx.fillStyle=css.getPropertyValue('--b');cx.beginPath();cx.arc(W/2,H-20-st.y*s-10,10,0,7);cx.fill();cx.fillStyle=css.getPropertyValue('--mut');cx.fillText('altura inicial h₀',8,H-24-st.h*s)}
+function out(){const e=st.e;$('o7').innerHTML=`<div>Rebotes: <span>${st.n}</span></div><div>Altura del último pico: <span>${st.pk.toFixed(2)} m</span></div><div>Teoría h₁ = h₀e²: <span>${(st.h*e*e).toFixed(2)} m</span></div><div><span>${e>.95?'casi perpetuo: se siente irreal':e<.3?'se pega al suelo: se siente muerta':'rebote creíble'}</span></div>`}
+let last=0;function tick(ts){const dt=Math.min((ts-last)/1e3,.03);last=ts;if(st.run){st.v-=9.81*dt;const pv=st.v;st.y+=st.v*dt;
+if(st.y<=0){st.y=0;st.v=-st.v*st.e;st.n++;if(st.v<.3){st.v=0;st.run=0}else st.pk=st.v*st.v/19.62}out()}draw();requestAnimationFrame(tick)}
+ctl('c7',[['e','Coeficiente de restitución e',0,1,.01,.75,'(sin unidades)'],['h','Altura inicial h₀',1,10,.5,5,'m']],p=>{st.e=p.e;st.h=p.h;if(!st.run){st.y=p.h;st.pk=p.h;st.n=0;st.v=0}out()});
+$('b7').onclick=()=>{st.y=st.h;st.v=0;st.n=0;st.pk=st.h;st.run=1};requestAnimationFrame(tick);
+// 8
+ctl('c8',[['w','Velocidad de la rueda ω_w',0,6000,100,2000,'rpm']],p=>{const w=p.w*2*Math.PI/60;
+$('o8').innerHTML=`<div>L rueda: <span>${(.005*w).toFixed(2)} N·m·s</span></div><div>Giro del satélite ω_s: <span>${(-.005/10*w*180/Math.PI).toFixed(1)} °/s</span></div><div>Saturación: <span>${(p.w/60).toFixed(0)} %</span></div>`});
+// 9
+ctl('c9',[['j','Incremento en Júpiter',0,12,.5,10,'km/s']],p=>{
+const mu=1774,en=[[1977.64,1],[1979.52,5.2],[1981.65,9.5],[1986.07,19.2],[1989.65,30.1],[1992,37.2]],dv=[p.j,4,2,-3];
+let C=100-mu/5.2,S=[],S0=[],C0=C;
+for(let k=0;k<5;k++){const[a,ra]=en[k],[b,rb]=en[k+1];
+for(let i=0;i<=20;i++){const t=a+(b-a)*i/20,r=ra+(rb-ra)*i/20;S.push([t,Math.sqrt(Math.max(0,C+mu/r))]);S0.push([t,Math.sqrt(Math.max(0,C0+mu/r))])}
+if(k<4){const vb=Math.sqrt(C+mu/rb)+dv[k];C=vb*vb-mu/rb;S.push([b,vb])}}
+$('g9').innerHTML=ch([{n:'con asistencias',p:S},{n:'sin asistencias',p:S0}],'Año','Rapidez heliocéntrica (km/s)',[[1979.52,'J'],[1981.65,'S'],[1986.07,'U'],[1989.65,'N']])});
+
+// 10
+let sp={x:[],t0:0,run:0};
+ctl('c10',[['k','Rigidez k',20,400,10,120,'N/m'],['c','Amortiguamiento c',0,40,.5,6,'N·s/m'],['m','Masa m',.5,3,.1,1,'kg']],p=>{
+const w0=Math.sqrt(p.k/p.m),z=p.c/(2*Math.sqrt(p.k*p.m));let x=0,v=0;const X=[];
+for(let i=0;i<=4000;i++){const a=(-p.k*(x-1)-p.c*v)/p.m;v+=a*.001;x+=v*.001;if(i%20==0)X.push([i/1000,x])}
+sp.x=X;sp.t0=performance.now();sp.run=1;
+$('o10').innerHTML=`<div>ω₀ = <span>${w0.toFixed(2)} rad/s</span></div><div>ζ = <span>${z.toFixed(2)}</span></div><div>Régimen: <span>${z<.98?'subamortiguado':z<1.02?'crítico':'sobreamortiguado'}</span></div>`;
+$('g10').innerHTML=ch([{n:'x(t)',p:X}],'Tiempo t (s)','Posición x (unidades de la meta)')});
+$('b10').onclick=()=>{sp.t0=performance.now();sp.run=1};
+(function an(){if(sp.run&&sp.x.length){const i=Math.min(sp.x.length-1,Math.floor((performance.now()-sp.t0)/20)),w=$('bx').parentNode.clientWidth-32;$('bx').style.left=(sp.x[i][1]*.7*w)+'px';if(i==sp.x.length-1)sp.run=0}requestAnimationFrame(an)})();
+// 11
+{const f0=220,T=rng(0,.02,.0001),sy=A=>{const m=A.reduce((a,b)=>a+b,0);return t=>A.reduce((s,a,i)=>s+a*Math.sin(2*Math.PI*f0*(i+1)*t),0)/m},fl=[1,.12,.04],sa=Array.from({length:10},(_,i)=>1/(i+1));
+$('g11').innerHTML=ch([{n:'flauta',p:f(T,sy(fl))},{n:'sierra',p:f(T,sy(sa))}],'Tiempo t (s)','Amplitud relativa (normalizada)')+ch([{n:'flauta',p:fl.map((a,i)=>[(i+1)*f0,a])},{n:'sierra',p:sa.map((a,i)=>[(i+1)*f0,a])}],'Frecuencia fₙ = n·f₀ (Hz)','Amplitud Aₙ (relativa)')}
+// 12
+ctl('c12',[['z','Razón de amortiguamiento ζ',.02,.5,.01,.1,'']],p=>{const R=rng(0,2,.01);
+$('g12').innerHTML=ch([{n:'A(r)·k/F₀',p:f(R,r=>1/Math.sqrt((1-r*r)**2+(2*p.z*r)**2))}],'Razón de frecuencias r = ω/ω₀ (sin unidades)','Amplificación A·k/F₀ (sin unidades)',[[1,'resonancia']])});
+// 13
+ctl('c13',[['q','Caudal Q',20,200,5,100,'L/min'],['P','Presión de referencia P₀',100,400,10,200,'kPa']],p=>{const Q=p.q/60000,D=rng(8,40,1),A=d=>Math.PI*(d/1000)**2/4,v=d=>Q/A(d),P0=p.P*1e3,v0=v(40);
+$('g13').innerHTML=ch([{n:'v(d)',p:f(D,v)}],'Diámetro interior d (mm)','Velocidad v (m/s)')+ch([{n:'P(d)',p:f(D,d=>(P0+.5*1000*(v0*v0-v(d)**2))/1e3)}],'Diámetro interior d (mm)','Presión manométrica P (kPa)')});
+</script></body></html>
