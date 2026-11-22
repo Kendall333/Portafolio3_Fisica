@@ -56,7 +56,7 @@ footer{max-width:960px;margin:auto;padding:0 20px 50px;font-size:14px;color:var(
 <h3>Caso de uso en Ingeniería del Software</h3>
 <p><b>Caso concreto:</b> el estudio de diseño de la NASA «Space Settlements» (SP-413, 1977) dimensiona el toro de Stanford (unos 1,8 km de diámetro y cerca de 1 rpm) con ecuaciones de rotación; hoy ese cálculo vive en herramientas de diseño paramétrico de hábitats.</p>
 <div class="eq">a_c = ω²r = v²/r · ω = 2π/T · f = 1/T</div>
-<p><b>Por qué modelar la física:</b> una gravedad «fija» no avisa que a radios pequeños la diferencia de a_c entre cabeza y pies, y el efecto Coriolis, marean a la gente. Con la ecuación se explora r contra rpm antes de construir; el costo es que los límites de confort humano son empíricos.</p>
+<p><b>Por qué modelar la física:</b> una gravedad «fija» no avisa que a radios pequeños la diferencia de a_c entre cabeza y pies y el efecto Coriolis marean a la gente. Con la ecuación se explora r contra rpm antes de construir; el costo es que los límites de confort humano son empíricos.</p>
 <h3>Diagrama propio</h3>
 <figure><svg viewBox="0 0 560 300" class="ch" role="img" aria-label="Hábitat rotatorio con eje, radio y aceleración centrípeta"><defs><marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
 <circle cx="190" cy="150" r="110" fill="none" stroke="var(--a)" stroke-width="10"/><circle cx="190" cy="150" r="5" fill="var(--ink)"/>
@@ -166,8 +166,8 @@ footer{max-width:960px;margin:auto;padding:0 20px 50px;font-size:14px;color:var(
 <p><b>Caso concreto:</b> los TPU de Google usan refrigeración líquida directa al chip (anunciada desde TPU v3, Google I/O 2018); el software de planificación hidráulica dimensiona tuberías y bombas para que cada rack reciba su caudal.</p>
 <div class="eq">Q = A₁v₁ = A₂v₂ · P₁ + ½ρv₁² = P₂ + ½ρv₂² · A = πd²/4</div>
 <p><b>Por qué modelar la física:</b> un caudal «igual para todos» ignora que al estrechar la tubería la velocidad sube y la presión estática baja, lo que puede causar cavitación o dejar sin flujo a un servidor lejano. Costo: Bernoulli ignora la fricción (que en tubos largos domina), así que se corrige con pérdidas de Darcy–Weisbach.</p>
-<h3>Perfil a lo largo de una tubería</h3><p class="tag">Parámetros declarados: agua, ρ = 1000 kg/m³; la sección de referencia es de 40 mm y tiene presión manométrica P₀ = 200 kPa; sin fricción ni cambio de altura.</p>
-<div id="c13"></div><div id="g13"></div>
+<h3>Perfil a lo largo de una tubería</h3><p class="tag">Parámetros declarados: agua, ρ = 1000 kg/m³; la sección de referencia es de 50 mm y tiene presión manométrica P₀ = 200 kPa; sin fricción ni cambio de altura.</p>
+<div id="c13"></div><div class="out" id="o13"></div><div id="g13"></div>
 <p class="src">Datos calculados por mí con las ecuaciones de arriba (valores ilustrativos, no mediciones). Fundamento: Çengel y Cimbala, <i>Mecánica de fluidos</i>, caps. de continuidad y Bernoulli.</p></section>
 
 <section id="cierre"><h2>Qué aprendí</h2>
@@ -281,6 +281,6 @@ $('g11').innerHTML=ch([{n:'flauta',p:f(T,sy(fl))},{n:'sierra',p:f(T,sy(sa))}],'T
 ctl('c12',[['z','Razón de amortiguamiento ζ',.02,.5,.01,.1,'']],p=>{const R=rng(0,2,.01);
 $('g12').innerHTML=ch([{n:'A(r)·k/F₀',p:f(R,r=>1/Math.sqrt((1-r*r)**2+(2*p.z*r)**2))}],'Razón de frecuencias r = ω/ω₀ (sin unidades)','Amplificación A·k/F₀ (sin unidades)',[[1,'resonancia']])});
 // 13
-ctl('c13',[['q','Caudal Q',20,200,5,100,'L/min'],['P','Presión de referencia P₀',100,400,10,200,'kPa']],p=>{const Q=p.q/60000,D=rng(8,40,1),A=d=>Math.PI*(d/1000)**2/4,v=d=>Q/A(d),P0=p.P*1e3,v0=v(40);
+ctl('c13',[['q','Caudal Q',20,150,5,100,'L/min'],['P','Presión de referencia P₀',100,400,10,200,'kPa']],p=>{const Q=p.q/60000,D=rng(12,50,1),A=d=>Math.PI*(d/1000)**2/4,v=d=>Q/A(d),P0=p.P*1e3,v0=v(50),Pm=(P0+.5*1000*(v0*v0-v(12)**2))/1e3,ab=Pm+101.3;$('o13').innerHTML=`<div>v en 12 mm: <span>${v(12).toFixed(1)} m/s</span></div><div>P en 12 mm: <span>${Pm.toFixed(0)} kPa</span></div><div><span>${ab<2.3?'¡Presión absoluta menor que la de vapor del agua: habría cavitación!':'Sin cavitación'}</span></div>`;
 $('g13').innerHTML=ch([{n:'v(d)',p:f(D,v)}],'Diámetro interior d (mm)','Velocidad v (m/s)')+ch([{n:'P(d)',p:f(D,d=>(P0+.5*1000*(v0*v0-v(d)**2))/1e3)}],'Diámetro interior d (mm)','Presión manométrica P (kPa)')});
 </script></body></html>
